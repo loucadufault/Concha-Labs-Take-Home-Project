@@ -1,0 +1,262 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Concha Labs Take Home Project Server
+tags:
+  - name: user_info
+    description: The basic user information for user accounts
+  - name: audio
+    description: The audio file data
+paths:
+  /accounts:
+    post:
+      tags:
+        - user_info
+      summary: Create a new account with the user info
+      operationId: addUserInfo
+      responses:
+        '200':
+          description: User info for the created account
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+      requestBody:
+        $ref: '#/components/requestBodies/UserInfo'
+    get:
+      tags:
+        - user_info
+      summary: Search for all user infos
+      operationId: getUserInfos
+      responses:
+        '200':
+          description: User infos found for search params
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserInfo'
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            The name by which to search the accounts. Returned accounts will
+            have a name that matches the value of this parameter exactly.
+        - name: email
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            The email by which to search the accounts. Returned accounts will
+            have an email that matches the value of this parameter exactly,
+            ignoring case in the domain part of the email.
+        - name: address
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            The email by which to search the accounts. Returned accounts will
+            have an address that matches the value of this parameter exactly.
+  '/accounts/{user_id}':
+    parameters:
+      - in: path
+        name: user_id
+        schema:
+          type: integer
+        required: true
+        description: The user ID
+    get:
+      tags:
+        - user_info
+      summary: Get a user's info
+      operationId: getUserInfo
+      responses:
+        '200':
+          description: User info for the given id
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+    delete:
+      tags:
+        - user_info
+      summary: Delete a user's info
+      operationId: deleteUserInfo
+      responses:
+        default:
+          description: Default response
+    put:
+      tags:
+        - user_info
+      summary: Update a user's info
+      operationId: updateUserInfo
+      requestBody:
+        $ref: '#/components/requestBodies/UserInfo'
+      responses:
+        '200':
+          description: Updated user info for the given id
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+  /audios:
+    post:
+      tags:
+        - audio
+      summary: Save a new audio data file
+      operationId: addAudio
+      responses:
+        '200':
+          description: Audio data
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Audio'
+      requestBody:
+        $ref: '#/components/requestBodies/Audio'
+    get:
+      tags:
+        - audio
+      summary: Get all audios
+      operationId: getAudios
+      responses:
+        '200':
+          description: All audios
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Audio'
+  '/audios/{session_id}':
+    parameters:
+      - in: path
+        name: session_id
+        schema:
+          type: integer
+        required: true
+        description: The session_id
+    get:
+      tags:
+        - audio
+      summary: Get an audio file
+      operationId: getAudio
+      responses:
+        '200':
+          description: Audio file for the given session_id
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Audio'
+    delete:
+      tags:
+        - audio
+      summary: Delete an audio file
+      operationId: deleteAudio
+      responses:
+        default:
+          description: Default response
+    put:
+      tags:
+        - audio
+      summary: Update an audio file
+      operationId: updateAudio
+      requestBody:
+        $ref: '#/components/requestBodies/Audio'
+      responses:
+        '200':
+          description: Updated audio file for the given session_id
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Audio'
+components:
+  schemas:
+    UserInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Autogenerated id to be used to query for this specific user info
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+        address:
+          type: string
+        image_hosted_url:
+          type: string
+          format: url
+    Audio:
+      type: object
+      properties:
+        ticks:
+          type: array
+          items:
+            type: number
+        session_id:
+          type: integer
+          format: int64
+        step_count:
+          type: integer
+          format: int64
+        selected_tick:
+          type: integer
+          format: int64
+  requestBodies:
+    UserInfo:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - email
+              - address
+            properties:
+              name:
+                type: string
+                example: John Smith
+              email:
+                type: string
+                example: john.smith@sample.com
+              address:
+                type: string
+                example: 1234 Main Road
+            xml:
+              name: Pet
+      description: User info object to be used as the basic user information to create a new account
+      required: true
+    Audio:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - ticks
+              - session_id
+              - step_count
+              - selected_tick
+            properties:
+              ticks:
+                type: array
+                items:
+                  type: number
+              session_id:
+                type: integer
+                format: int64
+              step_count:
+                type: integer
+                format: int64
+              selected_tick:
+                type: integer
+                format: int64
+      description: Audio file as a JSON object
+      required: true
