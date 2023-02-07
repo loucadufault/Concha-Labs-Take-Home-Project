@@ -40,7 +40,7 @@ It does not require provisioning CGP Storage buckets, or creating a key and copy
 
 Namely, the required GCP Storage buckets have already been provisioned (in a project of an account I own) and made publicly available. The credentials file for a service account key under this project is included in the source code committed to the VCS (for convenience, this is a bad practice outside a toy project).
 
-To set up this way, follow the #Setup process, skipping the #Authenticate-GCP-client-libraries and #Provision-GCP-resources steps.
+To set up this way, follow the #setup process, skipping the #authenticate-gcp-client-libraries and #provision-gcp-resources steps.
 
 # Setup
 
@@ -97,7 +97,7 @@ Alternatively, run the corresponding `make` target:
 
 `make provision-buckets`
 
-This should create a `bucket_metadata.cfg` file in the project root like (this is the same as the file included in the source code committed to the VCS, containing the names of the already-provisioned publicly-accessible buckets for the #Quick-setup):
+This should create a `bucket_metadata.cfg` file in the project root like (this is the same as the file included in the source code committed to the VCS, containing the names of the already-provisioned publicly-accessible buckets for the #quick-setup):
 
 ```
 [DEFAULT]
@@ -173,7 +173,7 @@ You can make sure the server is running by making a GET request to the `/ping` r
 
 It is recommended to use an HTTP GUI client like Postman to facilitate making requests to the server. The server expects requests to the `/accounts` and `/audios` endpoints. For most operations, the server either expects the data to be encoded as URL path or query params, or as a JSON payload in the body. For a few operations, it expects either JSON or image files as form data for file uploads.
 
-See the #Documentation section to explore the functionality provided by the API.
+See the #documentation section to explore the functionality provided by the API.
 
 Inspecting the code of the e2e tests under the `tests/e2e` directory can also be useful in understanding the server API.
 
